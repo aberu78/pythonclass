@@ -1,9 +1,18 @@
 class Student:
-    def __init__(self, first, last, student_id, grade):
-        self.first_name = first
-        self.last_name = last
-        self.person_id = student_id
-        self.student_grade = grade
+    def __init__(self,  student_id, first, last, grade, student):
+        self.grade = grade
+        self.first = first
+        self.last = last
+        self.student_id = student_id
+        student[student_id] = [first, last, grade]
 
 
-person = Student("Kaori", "gaddis", 111, 45)
+    def print_student(self, student):
+        print(student)
+        # def grade_avg (self):
+
+
+student_info = {}
+
+p1 = Student(45, "Kaori", "gaddis", 111, student_info)
+p1.print_student(student_info)
