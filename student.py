@@ -77,12 +77,24 @@ def is_valid_id(num):
         return False
 
 
+def is_name_valid(name):
+    if name.isalpha():
+        return True
+    else:
+        return False
+
+
+
+def set_name(name):
+    name = re.sub(' +', ' ', name.strip())
+    return name
+
+
 student_info = load()  # load student information from a file
 user_cond = True  # it will return false when q is selected
 
 while user_cond:  # program will run until q is selected
 
-    # print user choice to pick
     print("\nPlease enter \"a\" to ADD a student")
     print("Please enter \"d\" to remove a student")
     print("Please enter \"p\" to print student list")
@@ -101,19 +113,36 @@ while user_cond:  # program will run until q is selected
                 first = input("First name :")
                 last = input("Last name :")
 
-                if not first.isnumeric() and not last.isnumeric():
-                    first = re.sub(' +', ' ', first.strip())
-                    last = re.sub(' +', ' ', last.strip())
+                if is_name_valid(first) and is_name_valid(last):
                     student_first = first
                     student_last = last
                     check_name = False
+
+                elif first.find(' ') > -1 or last.find(' ') > -1:
+                    first = re.sub('  +', ' ', first.strip())
+                    last = re.sub('  +', ' ', last.strip())
+                    fname = first.split(" ")
+                    lname = last.split(" ")
+
+                    for x in fname:
+                        if is_name_valid(x):
+                            for y in lname:
+                                if is_name_valid(y):
+                                    student_first = first
+                                    student_last = last
+                                    check_name = False
+                                else:
+                                    print("invalid last names,try again \n")
+                        else:
+                            print("invalid first names,try again \n")
                 else:
-                    print("invalid names,try again \n")
+                    print("invalid names,try again -- \n")
 
             while check_id:
                 tmp = input("Please enter student ID :")
                 tmp = tmp.strip()  # remove any space
-                if tmp.isnumeric():
+
+                if tmp.isdigit():
                     tmp = int(tmp)  # save id as integer
                     # check to see if the student ID exist-NO DUPLICATE ID allows
                     if tmp not in student_info:
@@ -126,7 +155,7 @@ while user_cond:  # program will run until q is selected
                     print("Invalid id, try again \n")
 
             student_info[student_id] = add_student(student_id, student_first, student_last)  # save student information
-
+            print("A student is added")
     elif user_input == "g":
         isValid = True  # return false when information is deleted from dictionary
 
@@ -146,7 +175,7 @@ while user_cond:  # program will run until q is selected
         while isValid:
             remove_id = input("Please enter student ID :")
 
-            if remove_id.isnumeric():
+            if remove_id.isdigit():
                 remove_id = int(remove_id)
                 if remove_id in student_info:
                     del student_info[remove_id]      # check to see the keyword exists and valid number
