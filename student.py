@@ -35,7 +35,6 @@ class Student:
 
     def print_avg(self):
         if self.grade_exist():
-            avg = 0.0
             for sub in self.__grades:
                 avg = sum(self.__grades[sub]) / len(self.__grades[sub])
                 print("%s average is %.1f " % (sub, avg))
@@ -78,16 +77,7 @@ def is_valid_id(num):
 
 
 def is_name_valid(name):
-    if name.isalpha():
-        return True
-    else:
-        return False
-
-
-
-def set_name(name):
-    name = re.sub(' +', ' ', name.strip())
-    return name
+    return all(z.isalpha() or z.isspace() for z in name)
 
 
 student_info = load()  # load student information from a file
@@ -114,29 +104,13 @@ while user_cond:  # program will run until q is selected
                 last = input("Last name :")
 
                 if is_name_valid(first) and is_name_valid(last):
+                    first = re.sub('  +', ' ', first.strip())
+                    last = re.sub('  +', ' ', last.strip())
                     student_first = first
                     student_last = last
                     check_name = False
-
-                elif first.find(' ') > -1 or last.find(' ') > -1:
-                    first = re.sub('  +', ' ', first.strip())
-                    last = re.sub('  +', ' ', last.strip())
-                    fname = first.split(" ")
-                    lname = last.split(" ")
-
-                    for x in fname:
-                        if is_name_valid(x):
-                            for y in lname:
-                                if is_name_valid(y):
-                                    student_first = first
-                                    student_last = last
-                                    check_name = False
-                                else:
-                                    print("invalid last names,try again \n")
-                        else:
-                            print("invalid first names,try again \n")
                 else:
-                    print("invalid names,try again -- \n")
+                    print("invalid names,try again \n")
 
             while check_id:
                 tmp = input("Please enter student ID :")
@@ -155,7 +129,6 @@ while user_cond:  # program will run until q is selected
                     print("Invalid id, try again \n")
 
             student_info[student_id] = add_student(student_id, student_first, student_last)  # save student information
-            print("A student is added")
     elif user_input == "g":
         isValid = True  # return false when information is deleted from dictionary
 
