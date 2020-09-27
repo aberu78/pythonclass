@@ -16,7 +16,7 @@ class Student:
             self.__grades[subject].append(grade)
         else:
             self.__grades[subject] = [grade]
-        print("a grade is added")
+
 
     def grade_exist(self):
         if len(self.__grades.keys()) > 0:
@@ -28,15 +28,13 @@ class Student:
         print("ID: %s ; Name: %s %s " % (self.__id, self.__first_name, self.__last_name))
 
     def print_grades(self):
-        print("Entering print_grades()")
         if self.grade_exist():
             for sub in self.__grades:
-                    print("ID: %i Subject: %s grades: %s " % (self.__id, sub, self.__grades[sub]))
+                print("ID: %i Subject: %s grades: %s " % (self.__id, sub, self.__grades[sub]))
         else:
-            print("No grades entered for this student")
+            print("No grades entered for this student ID")
 
     def print_avg(self):
-        print("Entering print_avg() ")
         if self.grade_exist():
             avg = 0.0
             for subject in self.__grades:
@@ -45,9 +43,8 @@ class Student:
         else:
             print("No grades entered for this student ID")
 
-
     def __str__(self):
-        return "ID: %i  %s %s " % (self.__id, self.__last_name, self.__first_name)
+        return "ID: %i  %s %s %s" % (self.__id, self.__last_name, self.__first_name, self.__grades)
 
     def __repr__(self):
         return self.__str__()
@@ -73,6 +70,14 @@ def save():
         print("pickle success")
 
 
+def is_valid_id(num):
+    if num.isdigit():
+        if int(num) in student_info:
+            return True
+    else:
+        return False
+
+
 student_info = load()  # load student information from a file
 user_cond = True  # it will return false when q is selected
 
@@ -82,7 +87,7 @@ while user_cond:  # program will run until q is selected
     print("\nPlease enter \"a\" to ADD a student")
     print("Please enter \"d\" to remove a student")
     print("Please enter \"p\" to print student list")
-    print("Please enter \"g\" to print student list")
+    print("Please enter \"g\" to print student list, grades,or grades")
     print("Please enter \"q\" to exit\n")
     user_input = input(">>>")  # user input
 
@@ -127,37 +132,60 @@ while user_cond:  # program will run until q is selected
         isValid = True  # return false when information is deleted from dictionary
 
         while isValid:
-            add_id = input("Please enter student ID :")
-            if add_id.isnumeric():
-                add_id = int(add_id)
-                print("inside loop")
-                if add_id in student_info:
-                    subject = input("Class Name ?")
-                    grade = input("Grade ?")
-                    student_info[add_id].add_grade(subject, int(grade))
-                    isValid = False
+            student_id = input("Please enter student ID :")
+            if is_valid_id(student_id):
+                subject = input("Class Name ?")
+                grade = input("Grade ?")
+                student_info[int(student_id)].add_grade(subject, int(grade))
+                print("a grade is added")
+                isValid = False
             else:
                 print("Invalid ID, try again")
 
-    elif user_input == "p":
+    elif user_input == "d":  # remove the student
+        isValid = True  # return false when information is deleted from dictionary
+        while isValid:
+            remove_id = input("Please enter student ID :")
 
-        print("Please enter 1 to print all student Names")
-        print("Please enter 2 to all grades and average\n")
-        option = input("<<<<<<< ")
-        option = option.strip()
-
-        if int(option) == 1:
-            for student_id in student_info:
-                student_info[student_id].print_student()  # print student information
-        elif int(option) == 2:
-            student_id = input("Student ID ?")
-            if int(student_id) in student_info:
-                student_info[int(student_id)].print_grades()
-                student_info[int(student_id)].print_avg()
+            if remove_id.isnumeric():
+                remove_id = int(remove_id)
+                if remove_id in student_info:
+                    del student_info[remove_id]      # check to see the keyword exists and valid number
+                    isValid = False
+                    print("student removed\n")
+                else:
+                    print("student id you entered does not exists, please enter valid number\n")
             else:
-                print("invalid student id, try again")
-        else:
-            print("Invalid option error")
+                print("invalid id number, please enter student id\n")
+
+    elif user_input == "p":
+        isValid = True  # return false when information is deleted from dictionary
+        while isValid:
+            print("Please enter 1 to print all student Names")
+            print("Please enter 2 to all grades by student ID")
+            print("Please enter 3 to print the average grade by student ID\n")
+            option = input("<<<<<<< ")
+
+            if option == "1":  #print all student list
+                for student_id in student_info:
+                    student_info[student_id].print_student()
+                    isValid = False
+            elif option == "2":  # print grades by student ID
+                student_id = input("Student ID ?")
+                if is_valid_id(student_id):
+                    student_info[int(student_id)].print_grades()
+                    isValid = False
+                else:
+                    print("Invalid student ID, try again\n")
+            elif option == "3":  # print grade average by student ID
+                student_id = input("Student ID ?")
+                if is_valid_id(student_id):
+                    student_info[int(student_id)].print_avg()
+                    isValid = False
+                else:
+                    print("Invalid student ID, try again\n")
+            else:
+                print("Invalid. Enter 1,2,or 3, try again\n")
 
     elif user_input == "q":
         user_cond = False
