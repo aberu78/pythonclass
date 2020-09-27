@@ -11,12 +11,11 @@ class Student:
         self.__id = num_id
         self.__grades = {}
 
-    def add_grade(self, subject, grade):
-        if subject in self.__grades:
-            self.__grades[subject].append(grade)
+    def add_grade(self, sub, score):
+        if sub in self.__grades:
+            self.__grades[sub].append(score)
         else:
-            self.__grades[subject] = [grade]
-
+            self.__grades[sub] = [grade]
 
     def grade_exist(self):
         if len(self.__grades.keys()) > 0:
@@ -37,9 +36,9 @@ class Student:
     def print_avg(self):
         if self.grade_exist():
             avg = 0.0
-            for subject in self.__grades:
-                    avg = sum(self.__grades[subject]) / len(self.__grades[subject])
-                    print("%s average is %i" % (subject, avg))
+            for sub in self.__grades:
+                avg = sum(self.__grades[sub]) / len(self.__grades[sub])
+                print("%s average is %.1f " % (sub, avg))
         else:
             print("No grades entered for this student ID")
 
@@ -162,11 +161,11 @@ while user_cond:  # program will run until q is selected
         isValid = True  # return false when information is deleted from dictionary
         while isValid:
             print("Please enter 1 to print all student Names")
-            print("Please enter 2 to all grades by student ID")
-            print("Please enter 3 to print the average grade by student ID\n")
+            print("Please enter 2 to all grades by a student ID")
+            print("Please enter 3 to print the average grade by a student ID\n")
             option = input("<<<<<<< ")
 
-            if option == "1":  #print all student list
+            if option == "1":  # print all student list
                 for student_id in student_info:
                     student_info[student_id].print_student()
                     isValid = False
